@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>IoT</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="Chart.bundle.min.js"></script>
+</head>
+
+<body>
+    <h1>Luz de emergência</h1>
+    <canvas id="grafico" width="400" height="400"></canvas>
+</body>
+<script>
+
+    var grafico = {};
+
+    function plota_grafico() {
+        var contexto = document.getElementById("grafico");
+
+        grafico = new Chart(contexto, {
+            type: 'bar',
+            data: {
+                labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                datasets: [
+                    { 
+                        label: "Luz",
+                        data: [] 
+                    }
+                ]
+            },
+            options: {
+                responsive: false,
+
+            }
+        });
+    }
+
+    function carrega_dados() {
+        fetch("/dados")
+            .then(res => res.json())
+            .then(dados => {
+                grafico.data.datasets[0].data = dados;
+                grafico.update();
+            })
+    }
+
+    plota_grafico();
+    setInterval(carrega_dados, 1000);
+</script>
+
+</html>
